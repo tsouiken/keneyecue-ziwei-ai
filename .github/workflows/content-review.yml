@@ -1,0 +1,44 @@
+name: KenEyeCue Content Review
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  content-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check brand glossary exists
+        run: |
+          test -f docs/BRAND_GLOSSARY.md
+          test -f docs/CONTENT_REVIEW_SYSTEM.md
+
+      - name: Check user-facing content has CTA or service intent
+        run: |
+          set -e
+          FILES=$(find . -type f \( -name '*.html' -o -name '*.md' \) \
+            ! -path './.git/*' \
+            ! -path './AGENTS.md' \
+            ! -path './README.md' \
+            ! -path './docs/STRICT_REVIEW_SYSTEM.md' \
+            ! -path './docs/BRAND_GLOSSARY.md' \
+            ! -path './docs/CONTENT_REVIEW_SYSTEM.md' \
+            ! -path './.github/*')
+          if [ -z "$FILES" ]; then
+            echo 'ℹ️ 沒有可檢查的對外內容檔案。'
+            exit 0
+          fi
+          if ! grep -RInE '私訊|預約|校準|報告|完整方案|第一印象|眉眼訊號|眉眼結構' $FILES | head -n 1; then
+            echo '⚠️ 對外內容尚未明確連到 CTA、服務意圖或 KenEyeCue 核心語言。'
+            exit 1
+          fi
+          echo '✅ 對外內容已包含 CTA、服務意圖或核心語言。'
+
+      - name: Print content review reminder
+        run: |
+          echo 'Content must move toward: AI 找得到、客戶看得懂、高端願意信任。'
