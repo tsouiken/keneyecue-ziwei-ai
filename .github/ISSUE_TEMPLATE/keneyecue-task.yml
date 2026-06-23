@@ -1,0 +1,99 @@
+name: KenEyeCue 任務
+
+description: 建立品牌、內容、網站、報告、AI 自動化或商業迭代任務
+
+title: "[KenEyeCue] "
+
+labels: ["keneyecue", "strict-review"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        請用此模板建立任務。不要補腦；資料不足請標示 ⚠️待確認。
+
+  - type: textarea
+    id: root_problem
+    attributes:
+      label: 根本問題
+      description: 這次任務真正要解決什麼？
+      placeholder: 例如：客戶看不懂 KenEyeCue 與一般修眉的差異。
+    validations:
+      required: true
+
+  - type: textarea
+    id: known_facts
+    attributes:
+      label: ✅ 已知事實
+      description: 只填已確認資料。
+      placeholder: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: 修改範圍
+      description: 本次只處理哪些檔案、頁面或內容？
+      placeholder: 例如：只修改首頁 Hero 文案，不調整 UI。
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: review_type
+    attributes:
+      label: 任務類型
+      options:
+        - label: 品牌定位
+        - label: 社群內容
+        - label: 官網／SEO
+        - label: 報告模板
+        - label: DM／成交話術
+        - label: AI 自動化
+        - label: GitHub 系統
+        - label: 其他
+
+  - type: textarea
+    id: expected_output
+    attributes:
+      label: 預期輸出
+      description: 這次完成後應交付什麼？
+      placeholder: 例如：一頁式服務說明、30 則內容腳本、報告模板、workflow。
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: 限制條件
+      description: 必須遵守的限制。
+      value: |
+        1. 不補腦。
+        2. 資料不足標示 ⚠️待確認。
+        3. 事實、推論、建議分開。
+        4. 不使用絕對承諾語言。
+        5. 最終定稿由 Ken 決定。
+    validations:
+      required: true
+
+  - type: textarea
+    id: success_metrics
+    attributes:
+      label: 驗證指標
+      description: 怎麼知道這次任務有效？
+      placeholder: 例如：私訊數、預約數、報告購買數、AI 搜尋可見度、客戶理解度。
+    validations:
+      required: true
+
+  - type: textarea
+    id: pending
+    attributes:
+      label: ⚠️ 待確認
+      description: 本次缺哪些資料？
+      placeholder: |
+        - ⚠️待確認：
+    validations:
+      required: false
