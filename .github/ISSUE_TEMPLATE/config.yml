@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: KenEyeCue 嚴格複審系統
+    url: https://github.com/tsouiken/keneyecue-ziwei-ai/blob/main/docs/STRICT_REVIEW_SYSTEM.md
+    about: 建立任務前，請先確認嚴格複審與自動迭代規則。
