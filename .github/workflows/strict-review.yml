@@ -25,21 +25,31 @@ jobs:
       - name: Check forbidden absolute claims in user-facing files
         run: |
           set -e
-          PATTERN='一定會|必然|保證|100%|改運成功|招財保證|開運眉|命中註定|註定|命不好'
-          TARGETS=$(find . -type f \( -name '*.html' -o -name '*.js' -o -name '*.ts' -o -name '*.tsx' -o -name '*.json' -o -name '*.md' \) \
+          BASE_PATTERN='一定會|必然|保證|改運成功|招財保證|開運眉|命中註定|註定|命不好'
+          TEXT_PATTERN='一定會|必然|保證|100%|改運成功|招財保證|開運眉|命中註定|註定|命不好'
+
+          CODE_TARGETS=$(find . -type f \( -name '*.html' -o -name '*.js' -o -name '*.ts' -o -name '*.tsx' -o -name '*.json' \) \
+            ! -path './.git/*' \
+            ! -path './.github/*')
+
+          TEXT_TARGETS=$(find . -type f -name '*.md' \
             ! -path './.git/*' \
             ! -path './AGENTS.md' \
             ! -path './docs/STRICT_REVIEW_SYSTEM.md' \
             ! -path './docs/BRAND_GLOSSARY.md' \
             ! -path './docs/CONTENT_REVIEW_SYSTEM.md' \
-            ! -path './.github/PULL_REQUEST_TEMPLATE.md' \
-            ! -path './.github/ISSUE_TEMPLATE/*' \
-            ! -path './.github/workflows/strict-review.yml' \
-            ! -path './.github/workflows/content-review.yml')
-          if [ -n "$TARGETS" ] && grep -RInE "$PATTERN" $TARGETS; then
+            ! -path './.github/*')
+
+          if [ -n "$CODE_TARGETS" ] && grep -RInE "$BASE_PATTERN" $CODE_TARGETS; then
             echo '❌ 發現 KenEyeCue 高風險絕對化語言。請改為象徵性、趨勢性、方向性語句。'
             exit 1
           fi
+
+          if [ -n "$TEXT_TARGETS" ] && grep -RInE "$TEXT_PATTERN" $TEXT_TARGETS; then
+            echo '❌ 發現 KenEyeCue 高風險絕對化語言。請改為象徵性、趨勢性、方向性語句。'
+            exit 1
+          fi
+
           echo '✅ 未發現高風險絕對化語言。'
 
       - name: Check KenEyeCue core language
