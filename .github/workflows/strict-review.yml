@@ -1,0 +1,47 @@
+name: KenEyeCue Strict Review
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  strict-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check required review files
+        run: |
+          test -f AGENTS.md
+          test -f docs/STRICT_REVIEW_SYSTEM.md
+          test -f .github/PULL_REQUEST_TEMPLATE.md
+
+      - name: Check forbidden absolute claims
+        run: |
+          set -e
+          PATTERN='一定會|必然|保證|100%|改運成功|招財保證|開運眉|命中註定|註定|命不好'
+          TARGETS=$(find . -type f \( -name '*.md' -o -name '*.html' -o -name '*.js' -o -name '*.ts' -o -name '*.tsx' -o -name '*.json' \) \
+            ! -path './.git/*' \
+            ! -path './.github/workflows/strict-review.yml')
+          if [ -n "$TARGETS" ] && grep -RInE "$PATTERN" $TARGETS; then
+            echo '❌ 發現 KenEyeCue 高風險絕對化語言。請改為象徵性、趨勢性、方向性語句。'
+            exit 1
+          fi
+          echo '✅ 未發現高風險絕對化語言。'
+
+      - name: Check KenEyeCue core language
+        run: |
+          set -e
+          if ! grep -RInE '眉眼訊號|眉眼結構|第一印象校準|視覺權威' . --include='*.md' --include='*.html' --include='*.js' --include='*.ts' --include='*.tsx' | head -n 1; then
+            echo '❌ 未找到 KenEyeCue 核心語言：眉眼訊號／眉眼結構／第一印象校準／視覺權威。'
+            exit 1
+          fi
+          echo '✅ 已找到 KenEyeCue 核心語言。'
+
+      - name: Print strict review reminder
+        run: |
+          echo 'KenEyeCue Strict Review completed.'
+          echo 'AI 初稿／複審完成；最終定稿由 Ken 決定。'
