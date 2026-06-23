@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="KenEyeCue 眉眼訊號快篩：用 5 個問題找出第一印象中容易被誤讀的位置，並取得眉眼結構校準方向。">
+  <meta name="keywords" content="KenEyeCue, 眉眼訊號, 眉眼結構, 第一印象校準, 視覺權威, 高端修眉, 紫微眉眼">
+  <title>KenEyeCue 眉眼訊號快篩｜第一印象校準</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-dark: #2d3748;
+      --accent-gold: #d4af37;
+      --bg-mist: #f7f9fc;
+      --surface-white: #ffffff;
+      --text-secondary: #718096;
+      --line-soft: #e2e8f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: 'Lato', 'Noto Serif TC', serif;
+      line-height: 1.7;
+      color: var(--primary-dark);
+      background: var(--bg-mist);
+    }
+
+    header, main, footer {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 48px 24px 36px;
+      background: var(--surface-white);
+      border-bottom: 2px solid var(--accent-gold);
+      box-shadow: 0 4px 12px rgba(45, 55, 72, 0.06);
+    }
+
+    h1 {
+      margin: 0;
+      letter-spacing: 0.08em;
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    .subtitle {
+      margin-top: 12px;
+      color: var(--accent-gold);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+
+    .hero-copy {
+      max-width: 680px;
+      margin: 24px auto 0;
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+
+    .card {
+      margin-top: 28px;
+      padding: 28px;
+      background: var(--surface-white);
+      border: 1px solid var(--line-soft);
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(45, 55, 72, 0.05);
+    }
+
+    .section-title {
+      margin: 0 0 8px;
+      color: var(--primary-dark);
+      font-size: 1.35rem;
+    }
+
+    .section-note {
+      margin: 0 0 22px;
+      color: var(--text-secondary);
+    }
+
+    .question {
+      padding: 18px 0;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .question:first-of-type { border-top: 0; }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px 24px;
+      border: 1px solid var(--primary-dark);
+      border-radius: 8px;
+      background: var(--primary-dark);
+      color: var(--accent-gold);
+      cursor: pointer;
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background: var(--accent-gold);
+      border-color: var(--accent-gold);
+      color: #fff;
+    }
+
+    .result {
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .result-box {
+      padding: 18px;
+      border: 1px solid var(--line-soft);
+      border-radius: 10px;
+      background: #fbfcff;
+    }
+
+    .result-box h3 {
+      margin: 0 0 8px;
+      color: var(--accent-gold);
+      font-size: 1rem;
+    }
+
+    .cta {
+      margin-top: 24px;
+      padding: 22px;
+      background: #2d3748;
+      color: #fff;
+      border-radius: 12px;
+    }
+
+    .cta strong { color: var(--accent-gold); }
+
+    .disclaimer {
+      margin-top: 18px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    footer {
+      margin-top: 28px;
+      padding: 24px 0 12px;
+      color: var(--text-secondary);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 16px; }
+      .card { padding: 22px; }
+      .result-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>KenEyeCue</h1>
+    <div class="subtitle">Brow Signal Quick Screening</div>
+    <p class="hero-copy">
+      眉毛不是線條，而是你想呈現給世界的訊號。這份快篩會用 5 個問題，協助你初步看見自己的眉眼訊號可能被怎麼讀懂。
+    </p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2 class="section-title">眉眼訊號快篩</h2>
+      <p class="section-note">請依照你最近 30 天的狀態作答。結果只作為第一印象校準方向參考，正式眉眼結構仍需由 Ken 現場判斷。</p>
+
+      <div class="question">
+        <label for="occasion">1. 你最在意自己在哪一種場合被看見？</label>
+        <select id="occasion">
+          <option value="">請選擇</option>
+          <option value="authority">會議、提案、管理、談判</option>
+          <option value="camera">拍照、短影音、直播、公開露面</option>
+          <option value="trust">客戶諮詢、銷售、合作洽談</option>
+          <option value="softness">社交、約會、熟人互動</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="misread">2. 別人最常誤會你哪一點？</label>
+        <select id="misread">
+          <option value="">請選擇</option>
+          <option value="sharp">看起來太兇、太冷、不好靠近</option>
+          <option value="tired">看起來累、沒精神、狀態下滑</option>
+          <option value="soft">看起來太軟、沒主見、不夠有份量</option>
+          <option value="scattered">看起來散、不夠俐落、不夠精緻</option>
+          <option value="hard">看起來太硬、太用力、缺少親和感</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="desired">3. 你希望第一眼被讀成什麼感覺？</label>
+        <select id="desired">
+          <option value="">請選擇</option>
+          <option value="stable">穩定、可信、能承接</option>
+          <option value="decisive">俐落、有主見、有決斷力</option>
+          <option value="approachable">溫和、親近、好合作</option>
+          <option value="premium">精緻、高級、有距離感</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="changeLevel">4. 你能接受多明顯的改變？</label>
+        <select id="changeLevel">
+          <option value="">請選擇</option>
+          <option value="clean">只想乾淨、自然，不想被看出改很多</option>
+          <option value="balanced">希望變得更順眼、更有精神</option>
+          <option value="strategic">願意針對職場、鏡頭或高端形象明確調整</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label for="browConcern">5. 你最困擾眉眼哪個位置？</label>
+        <select id="browConcern">
+          <option value="">請選擇</option>
+          <option value="head">眉頭：太重、太淡、太靠近或太有防衛感</option>
+          <option value="peak">眉峰：太高、太銳、太平或不夠有主見</option>
+          <option value="tail">眉尾：下垂、散掉、不收、顯疲態</option>
+          <option value="flow">毛流與濃淡：凌亂、不均、太黑或太空</option>
+        </select>
+      </div>
+
+      <button type="button" id="screeningBtn">產生第一印象快篩結果</button>
+    </section>
+
+    <section class="card result" id="resultCard">
+      <h2 class="section-title" id="resultTitle">你的眉眼訊號初步結果</h2>
+      <p class="section-note" id="resultSummary"></p>
+
+      <div class="result-grid">
+        <div class="result-box">
+          <h3>容易被讀成</h3>
+          <p id="resultMisread"></p>
+        </div>
+        <div class="result-box">
+          <h3>優先觀察位置</h3>
+          <p id="resultPosition"></p>
+        </div>
+        <div class="result-box">
+          <h3>校準方向</h3>
+          <p id="resultDirection"></p>
+        </div>
+      </div>
+
+      <div class="cta">
+        <strong>下一步：</strong>私訊「校準」，並附上一張正面自然光照片。Ken 會先看三件事：你現在第一眼容易被怎麼讀、哪個眉眼位置最容易造成誤讀、適合先做報告還是直接做現場校準。
+      </div>
+
+      <p class="disclaimer">以上為眉眼訊號快篩，用於第一印象校準方向參考，不構成對任何具體結果的保證。</p>
+    </section>
+  </main>
+
+  <footer>
+    © KenEyeCue ｜眉眼訊號 × 眉眼結構 × 第一印象校準
+  </footer>
+
+  <script>
+    const misreadMap = {
+      sharp: {
+        label: '太兇／太冷',
+        position: '眉頭與眉峰',
+        direction: '降低壓迫感，保留決斷感。眉頭需要更柔順，眉峰避免過銳。'
+      },
+      tired: {
+        label: '太累／沒精神',
+        position: '眉尾與毛流收束',
+        direction: '拉回眉尾收束力，增加精神感與聚焦感。'
+      },
+      soft: {
+        label: '太軟／不夠有主見',
+        position: '眉峰與眉尾結構',
+        direction: '建立清楚但不生硬的眉眼結構，讓溫和不等於沒有立場。'
+      },
+      scattered: {
+        label: '太散／不夠俐落',
+        position: '毛流、濃淡與眉型邊界',
+        direction: '先整理雜訊與邊界，讓專業感更容易被第一時間讀到。'
+      },
+      hard: {
+        label: '太硬／太用力',
+        position: '眉色、眉頭與線條轉折',
+        direction: '保留結構，但降低線條重量，讓權威感更高級、更可被靠近。'
+      }
+    };
+
+    const occasionMap = {
+      authority: '你的核心場景偏向權威與決策，眉眼訊號需要讓人感覺穩、準、能承接。',
+      camera: '你的核心場景偏向鏡頭與可見度，眉眼訊號需要更清楚、更有辨識度。',
+      trust: '你的核心場景偏向信任與成交，眉眼訊號需要同時有專業感與可被靠近感。',
+      softness: '你的核心場景偏向關係與互動，眉眼訊號需要降低防衛感，保留自然親近。'
+    };
+
+    const desiredMap = {
+      stable: '校準目標偏向穩定可信。',
+      decisive: '校準目標偏向俐落與決斷。',
+      approachable: '校準目標偏向溫和與親近。',
+      premium: '校準目標偏向精緻與高端距離感。'
+    };
+
+    const concernMap = {
+      head: '眉頭會影響第一眼的親近感與防衛感。',
+      peak: '眉峰會影響決斷感、主見與壓迫感。',
+      tail: '眉尾會影響收束力、精神感與疲態。',
+      flow: '毛流與濃淡會影響整體秩序感與精緻度。'
+    };
+
+    document.getElementById('screeningBtn').addEventListener('click', () => {
+      const occasion = document.getElementById('occasion').value;
+      const misread = document.getElementById('misread').value;
+      const desired = document.getElementById('desired').value;
+      const changeLevel = document.getElementById('changeLevel').value;
+      const browConcern = document.getElementById('browConcern').value;
+
+      if (!occasion || !misread || !desired || !changeLevel || !browConcern) {
+        alert('請先完成 5 題快篩。');
+        return;
+      }
+
+      const misreadResult = misreadMap[misread];
+      const changeText = changeLevel === 'strategic'
+        ? '你可以進入較明確的第一印象校準。'
+        : changeLevel === 'balanced'
+          ? '你適合先做自然但有感的眉眼調整。'
+          : '你適合從乾淨、自然、低痕跡的校準開始。';
+
+      document.getElementById('resultSummary').textContent = `${occasionMap[occasion]} ${desiredMap[desired]} ${changeText}`;
+      document.getElementById('resultMisread').textContent = misreadResult.label;
+      document.getElementById('resultPosition').textContent = `${misreadResult.position}。${concernMap[browConcern]}`;
+      document.getElementById('resultDirection').textContent = misreadResult.direction;
+
+      const resultCard = document.getElementById('resultCard');
+      resultCard.classList.add('show');
+      resultCard.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
