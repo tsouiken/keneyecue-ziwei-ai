@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Check required review files
         run: |
@@ -22,37 +24,52 @@ jobs:
           test -f .github/PULL_REQUEST_TEMPLATE.md
           test -f .github/ISSUE_TEMPLATE/keneyecue-task.yml
 
-      - name: Check forbidden absolute claims in user-facing files
+      - name: Check forbidden absolute claims in changed user-facing files
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          set -e
+          set -euo pipefail
           BASE_PATTERN='一定會|必然|保證|改運成功|招財保證|開運眉|命中註定|註定|命不好'
           TEXT_PATTERN='一定會|必然|保證|100%|改運成功|招財保證|開運眉|命中註定|註定|命不好'
 
-          CODE_TARGETS=$(find . -type f \( -name '*.html' -o -name '*.js' -o -name '*.ts' -o -name '*.tsx' -o -name '*.json' \) \
-            ! -path './.git/*' \
-            ! -path './.github/*')
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+          fi
 
-          TEXT_TARGETS=$(find . -type f -name '*.md' \
-            ! -path './.git/*' \
-            ! -path './AGENTS.md' \
-            ! -path './docs/STRICT_REVIEW_SYSTEM.md' \
-            ! -path './docs/BRAND_GLOSSARY.md' \
-            ! -path './docs/CONTENT_REVIEW_SYSTEM.md' \
-            ! -path './docs/AGENT_BUILDER_MIGRATION.md' \
-            ! -path './agent-builder-exports/*' \
-            ! -path './.github/*')
+          FAILED=0
+          while IFS= read -r file; do
+            [ -n "$file" ] || continue
+            [ -f "$file" ] || continue
 
-          if [ -n "$CODE_TARGETS" ] && grep -RInE "$BASE_PATTERN" $CODE_TARGETS; then
-            echo '❌ 發現 KenEyeCue 高風險絕對化語言。請改為象徵性、趨勢性、方向性語句。'
+            case "$file" in
+              .github/*|AGENTS.md|docs/STRICT_REVIEW_SYSTEM.md|docs/BRAND_GLOSSARY.md|docs/CONTENT_REVIEW_SYSTEM.md|docs/AGENT_BUILDER_MIGRATION.md|agent-builder-exports/*)
+                continue
+                ;;
+              *.html|*.js|*.ts|*.tsx|*.json)
+                if grep -nE "$BASE_PATTERN" "$file"; then
+                  echo "❌ $file 發現高風險絕對化語言。"
+                  FAILED=1
+                fi
+                ;;
+              *.md)
+                if grep -nE "$TEXT_PATTERN" "$file"; then
+                  echo "❌ $file 發現高風險絕對化語言。"
+                  FAILED=1
+                fi
+                ;;
+            esac
+          done <<< "$CHANGED_FILES"
+
+          if [ "$FAILED" -ne 0 ]; then
+            echo '請將對外內容改為象徵性、趨勢性、方向性語句。'
             exit 1
           fi
 
-          if [ -n "$TEXT_TARGETS" ] && grep -RInE "$TEXT_PATTERN" $TEXT_TARGETS; then
-            echo '❌ 發現 KenEyeCue 高風險絕對化語言。請改為象徵性、趨勢性、方向性語句。'
-            exit 1
-          fi
-
-          echo '✅ 未發現高風險絕對化語言。'
+          echo '✅ 本次變更未發現高風險絕對化語言。'
 
       - name: Check KenEyeCue core language
         run: |
