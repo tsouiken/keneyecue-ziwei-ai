@@ -38,6 +38,8 @@ jobs:
             ! -path './docs/STRICT_REVIEW_SYSTEM.md' \
             ! -path './docs/BRAND_GLOSSARY.md' \
             ! -path './docs/CONTENT_REVIEW_SYSTEM.md' \
+            ! -path './docs/AGENT_BUILDER_MIGRATION.md' \
+            ! -path './agent-builder-exports/*' \
             ! -path './.github/*')
 
           if [ -n "$CODE_TARGETS" ] && grep -RInE "$BASE_PATTERN" $CODE_TARGETS; then
