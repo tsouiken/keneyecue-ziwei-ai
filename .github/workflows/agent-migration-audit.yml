@@ -1,0 +1,46 @@
+name: Agent Builder Migration Audit
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docs/AGENT_BUILDER_MIGRATION.md'
+      - 'agent-builder-exports/**'
+      - '.github/workflows/agent-migration-audit.yml'
+  workflow_dispatch:
+
+jobs:
+  migration-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check migration inventory files
+        run: |
+          set -e
+          test -f docs/AGENT_BUILDER_MIGRATION.md
+          test -f agent-builder-exports/README.md
+          test -f agent-builder-exports/WORKFLOW_INVENTORY.md
+          echo '✅ 遷移規格與盤點表存在。'
+
+      - name: Reject likely committed secrets
+        run: |
+          set -e
+          if grep -RInE '(sk-[A-Za-z0-9_-]{20,}|OPENAI_API_KEY[[:space:]]*=[[:space:]]*["'"'][^"'"']+["'"']|access[_-]?token[[:space:]]*=[[:space:]]*["'"'][^"'"']+["'"']|client[_-]?secret[[:space:]]*=[[:space:]]*["'"'][^"'"']+["'"'])' agent-builder-exports; then
+            echo '❌ agent-builder-exports 可能含有真實憑證，禁止提交。'
+            exit 1
+          fi
+          echo '✅ 未發現明顯真實憑證。'
+
+      - name: Compile exported Python when present
+        run: |
+          set -e
+          FILES=$(find agent-builder-exports -type f -name '*.py')
+          if [ -z "$FILES" ]; then
+            echo '⚠️ 尚未加入 Agent Builder Python export。'
+            exit 0
+          fi
+          python -m py_compile $FILES
+          echo '✅ Python export 語法檢查通過。'
